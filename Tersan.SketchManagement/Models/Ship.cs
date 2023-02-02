@@ -2,7 +2,7 @@
 
 namespace Tersan.SketchManagement.Models
 {
-    public class Ship : BaseModel
+    public class Ship : Point
     {
         public ShipStatus? ShipStatus { get; set; }
         public int ShipStatusID { get; set; }
@@ -11,8 +11,5 @@ namespace Tersan.SketchManagement.Models
         
         public int SketchID { get; set; }
 
-        public Point? Point { get; set; }
-        public int PointID { get; set; }
-        
     }
 }

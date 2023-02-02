@@ -4,20 +4,22 @@ using Tersan.SketchManagement.Models;
 
 namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
 {
-    public class PointEntityTypeConfiguration : IEntityTypeConfiguration<Point>
-    {
-        public void Configure(EntityTypeBuilder<Point> builder)
-        {
-            builder.ToTable("Points");
+    //public class PointEntityTypeConfiguration : IEntityTypeConfiguration<Point>
+    //{
+    //    public void Configure(EntityTypeBuilder<Point> builder)
+    //    {
+    //        builder.ToTable("Points");
 
-            builder.HasKey("ID");
+    //        builder.HasKey("ID");
 
-            builder.Property("X")
-                .IsRequired();
+    //        builder.Property("X")
+    //            .IsRequired();
 
-            builder.Property("Y")
-                .IsRequired();
-        }
-    }
+    //        builder.Property("Y")
+    //            .IsRequired();
+
+
+    //    }
+    //}
     
 }

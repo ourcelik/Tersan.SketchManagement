@@ -26,7 +26,10 @@ namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
             builder.Property("Email")
                 .IsRequired();
 
-            builder.Property("Password")
+            builder.Property("PasswordHash")
+                .IsRequired();
+
+            builder.Property("PasswordSalt")
                 .IsRequired();
 
             builder.Property("Phone");

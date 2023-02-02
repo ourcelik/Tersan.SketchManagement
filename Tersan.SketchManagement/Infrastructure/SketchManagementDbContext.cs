@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Tersan.SketchManagement.Infrastructure.EntityConfigurations;
 using Tersan.SketchManagement.Models;
 
 namespace Tersan.SketchManagement.Infrastructure
@@ -12,6 +13,7 @@ namespace Tersan.SketchManagement.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SketchManagementDbContext).Assembly);
+
         }
 
         public DbSet<Ship> Ships { get; set; }
@@ -20,10 +22,8 @@ namespace Tersan.SketchManagement.Infrastructure
         public DbSet<Credential> Credentials { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Office> Offices { get; set; }
-        public DbSet<Point> Points { get; set; }
         public DbSet<Sketch> Sketches { get; set; }
         public DbSet<UserCredential> UserCredentials { get; set; }
-
 
     }
 }

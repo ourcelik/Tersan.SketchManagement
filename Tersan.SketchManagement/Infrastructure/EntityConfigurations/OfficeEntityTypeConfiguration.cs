@@ -17,10 +17,7 @@ namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
                 .HasForeignKey("BuildingID")
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne((office) => office.Point)
-                .WithMany()
-                .HasForeignKey("PointID")
-                .OnDelete(DeleteBehavior.Cascade);
+        
 
             builder.Property("Floor")
                 .IsRequired();
