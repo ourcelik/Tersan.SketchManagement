@@ -18,23 +18,32 @@ namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property("Name")
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(100);
 
             builder.Property("Surname")
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(100);
 
             builder.Property("Email")
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(100);
 
             builder.Property("PasswordHash")
-                .IsRequired();
-
+                .IsRequired()
+                .HasMaxLength(500);
             builder.Property("PasswordSalt")
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(500);
 
-            builder.Property("Phone");
+            builder.Property("Phone")
+                .IsRequired()
+                .HasMaxLength(20);
 
-            builder.Property("Address");
+            builder.Property("Address")
+                .HasMaxLength(500);
+
+
         }
     }
     

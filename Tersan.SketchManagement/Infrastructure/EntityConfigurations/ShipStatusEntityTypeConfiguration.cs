@@ -13,7 +13,8 @@ namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
             builder.HasKey("ID");
 
             builder.Property("StatusType")
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(50);
         }
     }
     

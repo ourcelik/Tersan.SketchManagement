@@ -23,7 +23,8 @@ namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
                 .IsRequired();
 
             builder.Property("Name")
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(100);
         }
     }
     
