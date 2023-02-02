@@ -6,7 +6,11 @@ namespace Tersan.SketchManagement.Models
     {
         public int BuildingID { get; set; }
 
+        public Building? Building { get; set; }
+
         public int PointID { get; set; }
+
+        public Point? Point { get; set; }
 
         public int Floor { get; set; }
 
