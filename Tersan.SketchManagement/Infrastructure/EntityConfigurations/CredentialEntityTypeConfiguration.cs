@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Tersan.SketchManagement.Models;
+using Tersan.SketchManagement.Infrastructure.Models;
 
 namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
 {

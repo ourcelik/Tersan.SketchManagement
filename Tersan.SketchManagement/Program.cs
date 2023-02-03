@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Tersan.SketchManagement.Application.Repositories.Abstracts;
 using Tersan.SketchManagement.Infrastructure;
+using Tersan.SketchManagement.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.ResolveRepositoryDependencies();
 
 builder.Services.ConfigureDB(builder.Configuration.GetValue<string>("ConnectionStrings:SqlServerSketchManagement"));
 
@@ -37,6 +40,17 @@ public static class DbConfiguration
         services.AddDbContext<SketchManagementDbContext>(options =>
         options.UseSqlServer(connectionString));
         
+        return services;
+    }
+}
+
+//dependency resolver extension
+public static class DependencyInjectionResolver
+{
+    public static IServiceCollection ResolveRepositoryDependencies(this IServiceCollection services)
+    {
+        services.AddScoped<IBuildingRepository, BuildingRepository>();
+
         return services;
     }
 }
