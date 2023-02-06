@@ -32,10 +32,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers().RequireCors("CorsPolicy");
 
 app.Run();
 
