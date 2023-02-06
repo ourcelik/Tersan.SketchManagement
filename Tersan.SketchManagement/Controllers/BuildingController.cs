@@ -4,6 +4,8 @@ using Tersan.SketchManagement.Application.Repositories.Abstracts;
 using Tersan.SketchManagement.Application.ViewModels;
 using Tersan.SketchManagement.Infrastructure.Models;
 using Tersan.SketchManagement.Infrastructure.ViewModels.Building;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Tersan.SketchManagement.Controllers
 {
@@ -19,27 +21,45 @@ namespace Tersan.SketchManagement.Controllers
         }
 
         [HttpGet("GetAll")]
-        [ProducesResponseType(typeof(PaginatedItemsViewModel<Building>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaginatedItemsViewModel<OutputBuildingViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get()
         {
-            var result = await _buildingRepository.GetListAsync();
+            var result = await _buildingRepository.GetListAsync(include: (x) => x.Include(y => y.Sketch));
 
-            if (result == null)
+            if (result == null || !result.Data.Any())
                 return NotFound();
 
-            return Ok(result);
+            var newPaginatedItemsViewModel = new PaginatedItemsViewModel<OutputBuildingViewModel>(result.PageIndex, result.PageSize, result.Count, result.Data.Select(x => new OutputBuildingViewModel
+            {
+                ID = x.ID,
+                Name = x.Name,
+                SketchID = x.SketchID,
+                X = x.X,
+                Y = x.Y,
+            }).ToList());
+
+            return Ok(newPaginatedItemsViewModel);
         }
 
         [HttpGet()]
-        [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(OutputBuildingViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _buildingRepository.GetAsync(x => x.ID == id);
+            var result = await _buildingRepository.GetAsync(x => x.ID == id, include: (x) => x.Include((y) => y.Sketch));
 
             if (result == null)
                 return NotFound();
+
+            var mappedResult = new OutputBuildingViewModel
+            {
+                ID = result.ID,
+                Name = result.Name,
+                SketchID = result.SketchID,
+                X = result.X,
+                Y = result.Y,
+            };
 
             return Ok(result);
         }
@@ -55,34 +75,44 @@ namespace Tersan.SketchManagement.Controllers
                 inputBuildingViewModel.PageSize,
                 inputBuildingViewModel.PageIndex);
 
-            if (result == null) return NotFound();
+            if (result == null || !result.Data.Any()) return NotFound();
 
             return Ok(result);
         }
 
 
         [HttpPost()]
-        [ProducesResponseType(typeof(Building),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BuildingAddViewModel),StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Add(InputAddBuildingViewModel inputAddBuildingViewModel)
         {
-            var mappedItem = new Building()
+            var mappedItemForDB = new Building()
             {
                 Name = inputAddBuildingViewModel.Name,
                 SketchID = inputAddBuildingViewModel.SketchId,
                 X = inputAddBuildingViewModel.X,
                 Y = inputAddBuildingViewModel.Y
             };
-            var result = await _buildingRepository.AddAsync(mappedItem);
+            var result = await _buildingRepository.AddAsync(mappedItemForDB);
 
             if (result == null) NoContent();
 
-            return Ok(result);
+            var mappedItem = new BuildingAddViewModel()
+            {
+                ID = result.ID,
+                Name = result.Name,
+                SketchID = result.SketchID,
+                X = result.X,
+                Y = result.Y,
+                IsCreated = true,
+            };
+
+            return Ok(mappedItem);
         }
 
 
         [HttpPut()]
-        [ProducesResponseType(typeof(Building),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BuildingUpdateViewModel),StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(InputUpdateBuildingViewModel inputUpdateBuildingViewModel)
@@ -96,18 +126,27 @@ namespace Tersan.SketchManagement.Controllers
 
             buildingFromDb.Name = inputUpdateBuildingViewModel.Name != null ? inputUpdateBuildingViewModel.Name : buildingFromDb.Name;
 
-            var updatedItem = _buildingRepository.Update(buildingFromDb);
+            var updatedItem = await _buildingRepository.UpdateAsync(buildingFromDb);
 
             if (updatedItem == null) return BadRequest();
 
+            var mappedItem = new BuildingUpdateViewModel()
+            {
+                ID = updatedItem.ID,
+                Name = updatedItem.Name,
+                SketchID = updatedItem.SketchID,
+                X = updatedItem.X,
+                Y = updatedItem.Y,
+                IsUpdated = true,
+            };
 
-            return Ok(buildingFromDb);
+            return Ok(mappedItem);
 
         }
 
 
         [HttpDelete()]
-        [ProducesResponseType(typeof(Building),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(OutputBuildingViewModel),StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
@@ -120,15 +159,18 @@ namespace Tersan.SketchManagement.Controllers
 
             if (deleted == null) return BadRequest();
 
+            var mappedItem = new BuildingDeleteViewModel()
+            {
+                ID = deleted.ID,
+                Name = deleted.Name,
+                SketchID = deleted.SketchID,
+                X = deleted.X,
+                Y = deleted.Y,
+                IsDeleted= true,
+            };
+
             return Ok(deleted);
         }
-
-
-
-
-
-
-
 
     }
 }

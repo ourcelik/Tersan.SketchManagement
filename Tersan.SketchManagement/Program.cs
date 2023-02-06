@@ -50,6 +50,8 @@ public static class DependencyInjectionResolver
     public static IServiceCollection ResolveRepositoryDependencies(this IServiceCollection services)
     {
         services.AddScoped<IBuildingRepository, BuildingRepository>();
+        services.AddScoped<IShipRepository, ShipRepository>();
+        services.AddScoped<IShipStatusRepository, ShipStatusRepository>();
 
         return services;
     }
