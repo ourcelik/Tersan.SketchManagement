@@ -1,0 +1,47 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Linq;
+using Tersan.SketchManagement.Application.Repositories;
+using Tersan.SketchManagement.Application.Repositories.Abstracts;
+using Tersan.SketchManagement.Application.ViewModels;
+using Tersan.SketchManagement.Infrastructure.Models;
+using Tersan.SketchManagement.Infrastructure.ViewModels.Building;
+using Tersan.SketchManagement.Infrastructure.ViewModels.Ship;
+
+namespace Tersan.SketchManagement.Infrastructure.Repositories
+{
+    public class ShipRepository : EfBaseRepository<Ship, SketchManagementDbContext>, IShipRepository
+    {
+        public ShipRepository(SketchManagementDbContext context) : base(context)
+        {
+        }
+
+        public async Task<PaginatedItemsViewModel<ShipSummaryViewModel>> GetAllSummaryAsync(Expression<Func<Ship, bool>>? predicate = null, int pageSize = 10, int pageIndex = 0)
+        {
+            IQueryable<Ship> query = Query();
+
+
+            if (predicate != null) query = query.Where(predicate);
+            query = query.Include(s => s.ShipStatus);
+            if (pageSize == 0) pageSize = 10;
+            query = query.Skip(pageIndex * pageSize).Take(pageSize);
+
+            var count = await query.CountAsync();
+
+            var items = await query.ToListAsync();
+
+            var mappedItems = items.Select((e) => new ShipSummaryViewModel()
+            {
+                Name = e.Name,
+                X = e.X,
+                Y = e.Y,
+                StatusType = e.ShipStatus.StatusType
+            });
+            
+            return new PaginatedItemsViewModel<ShipSummaryViewModel>(pageIndex, pageSize, count, mappedItems);
+        }
+
+
+    }
+
+}

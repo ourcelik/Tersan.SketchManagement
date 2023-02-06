@@ -4,7 +4,10 @@ namespace Tersan.SketchManagement.Infrastructure.Models
 {
     public class Ship : Point
     {
+        public string? Name { get; set; }
+
         public ShipStatus? ShipStatus { get; set; }
+        
         public int ShipStatusID { get; set; }
 
         public Sketch? Sketch { get; set; }
