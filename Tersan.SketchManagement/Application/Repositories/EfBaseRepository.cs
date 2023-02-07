@@ -102,13 +102,12 @@ namespace Tersan.SketchManagement.Application.Repositories
                 if (predicate != null) queryable = queryable.Where(predicate);
                 if (orderBy != null) queryable = orderBy(queryable);
 
-                // Paginate
-                if (size == 0)
+                if (size != 0)
                 {
+                queryable = queryable.Skip(index * size).Take(size);
                     size = 10;
                 }
                 int totalItems = await queryable.CountAsync();
-                queryable = queryable.Skip(index * size).Take(size);
 
                 // Execute
 

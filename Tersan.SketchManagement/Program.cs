@@ -1,6 +1,9 @@
+using Amazon.S3;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Tersan.SketchManagement.Application.Repositories.Abstracts;
 using Tersan.SketchManagement.Infrastructure;
+using Tersan.SketchManagement.Infrastructure.Persistence.Repositories;
 using Tersan.SketchManagement.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +15,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ResolveRepositoryDependencies();
+builder.Services.AddDefaultAWSOptions((builder.Configuration.GetAWSOptions()));
+builder.Services.AddAWSService<IAmazonS3>();
 // configure cors 
 builder.Services.AddCors(options =>
 {
@@ -59,7 +64,9 @@ public static class DependencyInjectionResolver
         services.AddScoped<IBuildingRepository, BuildingRepository>();
         services.AddScoped<IShipRepository, ShipRepository>();
         services.AddScoped<IShipStatusRepository, ShipStatusRepository>();
-
+        services.AddScoped<ISketchRepository, SketchRepository>();
+        services.AddScoped<IAWSRepository, AWSRepository>();
+        
         return services;
     }
 }

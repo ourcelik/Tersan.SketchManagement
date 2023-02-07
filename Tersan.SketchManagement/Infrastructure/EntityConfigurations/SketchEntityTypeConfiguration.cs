@@ -16,6 +16,17 @@ namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(200);
             
+            builder.Property("Name")
+                .IsRequired()
+                .HasMaxLength(100);
+                
+            builder.HasIndex("Name")
+                .IsUnique();
+
+            builder.Property("Description")
+                .IsRequired()
+                .HasMaxLength(500);
+            
         }
     }
     
