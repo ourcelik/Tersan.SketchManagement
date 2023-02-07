@@ -8,6 +8,7 @@ namespace Tersan.SketchManagement.Infrastructure.Repositories
     {
         public ShipStatusRepository(SketchManagementDbContext context) : base(context)
         {
+            
         }
     }
 }

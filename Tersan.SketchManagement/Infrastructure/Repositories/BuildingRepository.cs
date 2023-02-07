@@ -31,7 +31,8 @@ namespace Tersan.SketchManagement.Infrastructure.Repositories
             {
                 Name = e.Name,
                 X = e.X,
-                Y = e.Y
+                Y = e.Y,
+                ID = e.ID
             });
 
             return new PaginatedItemsViewModel<BuildingSummaryViewModel>(pageIndex, pageSize, count,mappedItems);
