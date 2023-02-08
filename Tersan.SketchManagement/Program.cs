@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Tersan.SketchManagement.Application.Repositories.Abstracts;
 using Tersan.SketchManagement.Infrastructure;
 using Tersan.SketchManagement.Infrastructure.Persistence.Repositories;
-using Tersan.SketchManagement.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

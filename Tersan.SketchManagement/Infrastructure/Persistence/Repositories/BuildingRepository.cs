@@ -4,11 +4,11 @@ using Tersan.SketchManagement.Application.Repositories;
 using Tersan.SketchManagement.Application.Repositories.Abstracts;
 using Tersan.SketchManagement.Application.ViewModels;
 using Tersan.SketchManagement.Infrastructure.Models;
-using Tersan.SketchManagement.Infrastructure.ViewModels.Building;
+using Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Building;
 
-namespace Tersan.SketchManagement.Infrastructure.Repositories
+namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
 {
-    public class BuildingRepository : EfBaseRepository<Building, SketchManagementDbContext>,IBuildingRepository
+    public class BuildingRepository : EfBaseRepository<Building, SketchManagementDbContext>, IBuildingRepository
     {
         public BuildingRepository(SketchManagementDbContext context) : base(context)
         {
@@ -16,9 +16,9 @@ namespace Tersan.SketchManagement.Infrastructure.Repositories
 
         public async Task<PaginatedItemsViewModel<BuildingSummaryViewModel>> GetAllSummaryAsync(Expression<Func<Building, bool>>? predicate = null, int pageSize = 10, int pageIndex = 0)
         {
-            IQueryable<Building> query = Query();
-            
-            
+            var query = Query();
+
+
             if (predicate != null) query = query.Where(predicate);
 
             if (pageSize == 0) pageSize = 10;
@@ -38,7 +38,7 @@ namespace Tersan.SketchManagement.Infrastructure.Repositories
                 ID = e.ID
             });
 
-            return new PaginatedItemsViewModel<BuildingSummaryViewModel>(pageIndex, pageSize, count,mappedItems);
+            return new PaginatedItemsViewModel<BuildingSummaryViewModel>(pageIndex, pageSize, count, mappedItems);
         }
 
 

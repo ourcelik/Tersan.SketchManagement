@@ -1,4 +1,4 @@
-﻿namespace Tersan.SketchManagement.Infrastructure.ViewModels.Ship
+﻿namespace Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Ship
 {
     public class ShipAddViewModel : OutputShipViewModel
     {

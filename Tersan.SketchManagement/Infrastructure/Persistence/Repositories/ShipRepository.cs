@@ -5,10 +5,9 @@ using Tersan.SketchManagement.Application.Repositories;
 using Tersan.SketchManagement.Application.Repositories.Abstracts;
 using Tersan.SketchManagement.Application.ViewModels;
 using Tersan.SketchManagement.Infrastructure.Models;
-using Tersan.SketchManagement.Infrastructure.ViewModels.Building;
-using Tersan.SketchManagement.Infrastructure.ViewModels.Ship;
+using Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Ship;
 
-namespace Tersan.SketchManagement.Infrastructure.Repositories
+namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
 {
     public class ShipRepository : EfBaseRepository<Ship, SketchManagementDbContext>, IShipRepository
     {
@@ -18,7 +17,7 @@ namespace Tersan.SketchManagement.Infrastructure.Repositories
 
         public async Task<PaginatedItemsViewModel<ShipSummaryViewModel>> GetAllSummaryAsync(Expression<Func<Ship, bool>>? predicate = null, int pageSize = 10, int pageIndex = 0)
         {
-            IQueryable<Ship> query = Query();
+            var query = Query();
 
 
             if (predicate != null) query = query.Where(predicate);
@@ -37,7 +36,7 @@ namespace Tersan.SketchManagement.Infrastructure.Repositories
                 Y = e.Y,
                 StatusType = e.ShipStatus.StatusType
             });
-            
+
             return new PaginatedItemsViewModel<ShipSummaryViewModel>(pageIndex, pageSize, count, mappedItems);
         }
 

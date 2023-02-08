@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Tersan.SketchManagement.Application.Repositories.Abstracts;
 using Tersan.SketchManagement.Application.ViewModels;
 using Tersan.SketchManagement.Infrastructure.Models;
-using Tersan.SketchManagement.Infrastructure.ViewModels.Sketch;
+using Tersan.SketchManagement.Infrastructure.Persistence.Dtos;
+using Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Sketch;
 
 namespace Tersan.SketchManagement.Controllers
 {
@@ -31,7 +32,7 @@ namespace Tersan.SketchManagement.Controllers
             {
                 return BadRequest();
             }
-            var mappedSketch = new SketchAWS
+            var mappedSketch = new SketchDto
             {
                 Name = sketch.Name,
                 Description = sketch.Description,

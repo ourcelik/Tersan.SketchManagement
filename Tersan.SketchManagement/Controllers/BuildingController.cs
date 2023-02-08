@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Tersan.SketchManagement.Application.Repositories.Abstracts;
 using Tersan.SketchManagement.Application.ViewModels;
 using Tersan.SketchManagement.Infrastructure.Models;
-using Tersan.SketchManagement.Infrastructure.ViewModels.Building;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Building;
 
 namespace Tersan.SketchManagement.Controllers
 {

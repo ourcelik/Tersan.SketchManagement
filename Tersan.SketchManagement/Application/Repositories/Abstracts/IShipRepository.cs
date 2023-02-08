@@ -1,9 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Tersan.SketchManagement.Application.ViewModels;
 using Tersan.SketchManagement.Infrastructure.Models;
-using Tersan.SketchManagement.Infrastructure.Repositories;
-using Tersan.SketchManagement.Infrastructure.ViewModels.Building;
-using Tersan.SketchManagement.Infrastructure.ViewModels.Ship;
+using Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Ship;
 
 namespace Tersan.SketchManagement.Application.Repositories.Abstracts
 {
