@@ -169,7 +169,7 @@ namespace Tersan.SketchManagement.Controllers
                 IsDeleted= true,
             };
 
-            return Ok(deleted);
+            return Ok(mappedItem);
         }
 
     }
