@@ -14,32 +14,44 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
 {
     public class SketchRepository : EfBaseRepository<Sketch, SketchManagementDbContext>, ISketchRepository
     {
-        IAWSRepository _awsRepository;
+        IFileRepository _fileRepository;
 
-        public SketchRepository(SketchManagementDbContext context, IAWSRepository awsRepository) : base(context)
+        public SketchRepository(SketchManagementDbContext context, IFileRepository fileRepository) : base(context)
         {
-            _awsRepository = awsRepository;
+            _fileRepository = fileRepository;
         }
 
         public async Task<Sketch> UploadSketchAsync(SketchAWS sketch)
         {
-            await _awsRepository.UploadAsync("tersan-sketches", sketch.Name, sketch.File);
-            var result =  await AddAsync(new Sketch
+            var sketchFromDb = await GetAsync((x) => x.Name == sketch.Name);
+
+            await _fileRepository.UploadAsync("tersan-sketches", sketch.Name, sketch.File);
+
+            if (sketchFromDb != null)
+            {
+                sketchFromDb.ImageUrl = $"https://tersan-sketches.s3.eu-central-1.amazonaws.com/{sketch.Name}";
+                sketchFromDb.Description = sketch.Description;
+                return await UpdateAsync(sketchFromDb);
+            }
+
+            return sketchFromDb ?? await AddAsync(new Sketch
             {
                 Name = sketch.Name,
                 Description = sketch.Description,
                 ImageUrl = $"https://tersan-sketches.s3.eu-central-1.amazonaws.com/{sketch.Name}"
-                
             });
-
-            return result;
         }
 
         public async Task<Sketch> DeleteSketchAsync(string name)
         {
             var sketch = await GetAsync((x) => x.Name == name);
-            
-            await _awsRepository.DeleteAsync("tersan-sketches", name);
+
+            if (sketch == null)
+            {
+                throw new Exception("Sketch not found");
+            }
+
+            await _fileRepository.DeleteAsync("tersan-sketches", name);
             
             var result = await DeleteAsync(sketch);
             

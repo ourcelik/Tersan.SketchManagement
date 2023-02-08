@@ -27,7 +27,7 @@ namespace Tersan.SketchManagement.Controllers
         [HttpGet("GetAll")]
         [ProducesResponseType(typeof(PaginatedItemsViewModel<OutputShipViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
             var result = await _shipRepository.GetListAsync(include: (x) => x.Include(y => y.ShipStatus).Include(y => y.Sketch));
 
@@ -126,7 +126,7 @@ namespace Tersan.SketchManagement.Controllers
             ShipStatus? status = new();
             if (!String.IsNullOrEmpty(inputUpdateShipViewModel.ShipStatus))
             {
-                // TODO GetShip Status ID then add to shipFromDb instance after create repo for it
+                
                 status = await  _shipStatusRepository.GetAsync((ss) => ss.StatusType == inputUpdateShipViewModel.ShipStatus);
 
                 if (status == null) return BadRequest("There is no StatusType like that you wrote");

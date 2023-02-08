@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ResolveRepositoryDependencies();
@@ -65,7 +65,7 @@ public static class DependencyInjectionResolver
         services.AddScoped<IShipRepository, ShipRepository>();
         services.AddScoped<IShipStatusRepository, ShipStatusRepository>();
         services.AddScoped<ISketchRepository, SketchRepository>();
-        services.AddScoped<IAWSRepository, AWSRepository>();
+        services.AddScoped<IFileRepository, AWSRepository>();
         
         return services;
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Tersan.SketchManagement.Application.Repositories.Abstracts;
+using Tersan.SketchManagement.Application.ViewModels;
 using Tersan.SketchManagement.Infrastructure.Models;
 using Tersan.SketchManagement.Infrastructure.ViewModels.Sketch;
 
@@ -21,6 +22,9 @@ namespace Tersan.SketchManagement.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(Sketch), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromQuery]SketchCreateViewModel sketch,IFormFile file)
         {
             if (file == null)
@@ -36,27 +40,47 @@ namespace Tersan.SketchManagement.Controllers
            
             var result =  await _sketchRepository.UploadSketchAsync(mappedSketch);
 
+            if(result == null)
+                return NotFound();
+
             return Ok(result);
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(Sketch), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(string name)
         {
             var result = await _sketchRepository.GetAsync((x) => x.Name == name);
+
+            if (result == null)
+                return NotFound();
+
             return Ok(result);
         }
 
         [HttpGet("GetAll")]
+        [ProducesResponseType(typeof(PaginatedItemsViewModel<Sketch>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
             var result = await _sketchRepository.GetListAsync();
+
+            if (result == null || !result.Data.Any())
+                return NotFound();
+
             return Ok(result);
         }
 
         [HttpDelete]
+        [ProducesResponseType(typeof(Sketch), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(string name)
         {
             var result = await _sketchRepository.DeleteSketchAsync(name);
+
+            if (result == null)
+                return NotFound();
+        
             return Ok(result);
         }
     }

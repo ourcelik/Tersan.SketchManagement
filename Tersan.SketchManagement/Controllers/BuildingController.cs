@@ -23,7 +23,7 @@ namespace Tersan.SketchManagement.Controllers
         [HttpGet("GetAll")]
         [ProducesResponseType(typeof(PaginatedItemsViewModel<OutputBuildingViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
             var result = await _buildingRepository.GetListAsync(include: (x) => x.Include(y => y.Sketch));
 

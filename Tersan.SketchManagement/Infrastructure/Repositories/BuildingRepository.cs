@@ -20,12 +20,15 @@ namespace Tersan.SketchManagement.Infrastructure.Repositories
             
             
             if (predicate != null) query = query.Where(predicate);
+
             if (pageSize == 0) pageSize = 10;
+
             query = query.Skip(pageIndex * pageSize).Take(pageSize);
 
-            var count = await query.CountAsync();
 
             var items = await query.ToListAsync();
+
+            var count = items.Count;
 
             var mappedItems = items.Select((e) => new BuildingSummaryViewModel()
             {

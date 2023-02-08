@@ -12,7 +12,6 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
             _s3Client = s3Client;
         }
 
-        // create bucket
         public async Task CreateBucketAsync(string bucketName)
         {
             var putBucketRequest = new PutBucketRequest
