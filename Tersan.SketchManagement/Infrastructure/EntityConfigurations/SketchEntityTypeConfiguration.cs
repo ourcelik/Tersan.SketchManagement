@@ -26,6 +26,12 @@ namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
             builder.Property("Description")
                 .IsRequired()
                 .HasMaxLength(500);
+
+            builder.Property("Width")
+                .IsRequired();
+
+            builder.Property("Height")
+                .IsRequired();
             
         }
     }

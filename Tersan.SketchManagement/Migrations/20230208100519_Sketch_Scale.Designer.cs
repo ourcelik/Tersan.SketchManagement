@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tersan.SketchManagement.Infrastructure;
 
@@ -11,9 +12,11 @@ using Tersan.SketchManagement.Infrastructure;
 namespace Tersan.SketchManagement.Migrations
 {
     [DbContext(typeof(SketchManagementDbContext))]
-    partial class SketchManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230208100519_Sketch_Scale")]
+    partial class SketchScale
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,19 +39,17 @@ namespace Tersan.SketchManagement.Migrations
                     b.Property<int>("SketchID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("WindowHeight")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("WindowHeight")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("WindowWidth")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("WindowWidth")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("X")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("decimal(18,6)");
+                    b.Property<int>("X")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("Y")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("decimal(18,6)");
+                    b.Property<int>("Y")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -151,11 +152,11 @@ namespace Tersan.SketchManagement.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<decimal>("X")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("X")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("Y")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Y")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -184,11 +185,11 @@ namespace Tersan.SketchManagement.Migrations
                     b.Property<int>("SketchID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("X")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("X")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("Y")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Y")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Tersan.SketchManagement.Infrastructure.Models;
 using Tersan.SketchManagement.Infrastructure.Persistence.Dtos;
@@ -11,6 +12,8 @@ namespace Tersan.SketchManagement.Application.Repositories.Abstracts
     {
         public Task<Sketch> UploadSketchAsync(SketchDto sketch);
         public Task<Sketch> DeleteSketchAsync(string name);
+
+        public Task<SizeDto> GetSizeAsync(Expression<Func<Sketch, bool>> predicate);
 
     }
 }

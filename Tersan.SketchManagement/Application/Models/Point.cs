@@ -4,8 +4,8 @@ namespace Tersan.SketchManagement.Infrastructure.Models
 {
     public class Point : BaseModel
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public decimal X { get; set; }
+        public decimal Y { get; set; }
     }
 
 }

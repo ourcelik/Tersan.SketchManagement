@@ -39,7 +39,9 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
             {
                 Name = sketch.Name,
                 Description = sketch.Description,
-                ImageUrl = $"https://tersan-sketches.s3.eu-central-1.amazonaws.com/{sketch.Name}"
+                ImageUrl = $"https://tersan-sketches.s3.eu-central-1.amazonaws.com/{sketch.Name}",
+                Height = sketch.Height,
+                Width = sketch.Width
             });
         }
 
@@ -57,6 +59,22 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
             var result = await DeleteAsync(sketch);
             
             return result;
+        }
+
+        public async Task<SizeDto> GetSizeAsync(Expression<Func<Sketch, bool>> predicate)
+        {
+            Sketch sketch = await GetAsync(predicate);
+
+            if (sketch == null)
+            {
+                throw new Exception("Sketch not found");
+            }
+
+            return new SizeDto
+            {
+                Height = sketch.Height,
+                Width = sketch.Width
+            };
         }
 
     }

@@ -17,6 +17,21 @@ namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
                 .HasForeignKey("SketchID")
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Property("X")
+                .IsRequired();
+
+            //change X sensitivity
+            builder.Property("X")
+                .HasPrecision(18, 6);
+
+            builder.Property("Y")
+                .IsRequired();
+
+            //change Y sensitivity
+
+            builder.Property("Y")
+                .HasPrecision(18, 6);
+
         }
     }
     

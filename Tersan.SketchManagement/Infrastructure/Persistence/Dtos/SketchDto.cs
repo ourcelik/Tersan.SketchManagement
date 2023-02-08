@@ -11,5 +11,9 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Dtos
         public string? Description { get; set; }
         public IFormFile? File { get; set; }
 
+        public int Width { get; set; }
+        
+        public int Height { get; set; }
+
     }
 }

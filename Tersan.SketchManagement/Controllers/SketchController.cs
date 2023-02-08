@@ -36,7 +36,9 @@ namespace Tersan.SketchManagement.Controllers
             {
                 Name = sketch.Name,
                 Description = sketch.Description,
-                File = file
+                File = file,
+                Height = sketch.Height,
+                Width = sketch.Width
             };
            
             var result =  await _sketchRepository.UploadSketchAsync(mappedSketch);
