@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Tersan.SketchManagement.Application.Repositories.Abstracts;
 using Tersan.SketchManagement.Application.ViewModels;
@@ -16,18 +17,22 @@ namespace Tersan.SketchManagement.Controllers
     public class SketchController : ControllerBase
     {
         ISketchRepository _sketchRepository;
+        IValidator<InputSketchCreateViewModel> _validator;
 
-        public SketchController(ISketchRepository sketchRepository)
+        public SketchController(ISketchRepository sketchRepository,IValidator<InputSketchCreateViewModel> validator)
         {
             _sketchRepository = sketchRepository;
+            _validator = validator;
         }
 
         [HttpPost]
         [ProducesResponseType(typeof(Sketch), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Create([FromQuery]SketchCreateViewModel sketch,IFormFile file)
+        public async Task<IActionResult> Create([FromQuery]InputSketchCreateViewModel sketch,IFormFile file)
         {
+            _validator.ValidateAndThrow(sketch);
+
             if (file == null)
             {
                 return BadRequest();
@@ -50,8 +55,12 @@ namespace Tersan.SketchManagement.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(Sketch), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(string name)
         {
+            if(string.IsNullOrEmpty(name))
+                return BadRequest();
+
             var result = await _sketchRepository.GetAsync((x) => x.Name == name);
 
             if (result == null)
@@ -75,8 +84,11 @@ namespace Tersan.SketchManagement.Controllers
         [HttpDelete]
         [ProducesResponseType(typeof(Sketch), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                return BadRequest();
             var result = await _sketchRepository.DeleteSketchAsync(name);
 
             if (result == null)

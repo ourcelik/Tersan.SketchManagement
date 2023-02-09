@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Sketch
 {
-    public class SketchCreateViewModel
+    public class InputSketchCreateViewModel
     {
         public string? Name { get; set; }
 

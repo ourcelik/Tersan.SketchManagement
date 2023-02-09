@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -7,6 +8,7 @@ using Tersan.SketchManagement.Application.ViewModels;
 using Tersan.SketchManagement.Infrastructure.Models;
 using Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Building;
 using Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Ship;
+using Tersan.SketchManagement.Infrastructure.Validation.Factory;
 
 namespace Tersan.SketchManagement.Controllers
 {
@@ -18,10 +20,13 @@ namespace Tersan.SketchManagement.Controllers
 
         private readonly IShipStatusRepository _shipStatusRepository;
 
-        public ShipController(IShipRepository shipRepository, IShipStatusRepository shipStatusRepository)
+        private readonly ICustomValidatorFactory _validatorFactory;
+
+        public ShipController(IShipRepository shipRepository, IShipStatusRepository shipStatusRepository, ICustomValidatorFactory validatorFactory)
         {
             _shipRepository = shipRepository;
             this._shipStatusRepository = shipStatusRepository;
+            _validatorFactory = validatorFactory;
         }
         [HttpGet("GetAll")]
         [ProducesResponseType(typeof(PaginatedItemsViewModel<OutputShipViewModel>), StatusCodes.Status200OK)]
@@ -49,8 +54,14 @@ namespace Tersan.SketchManagement.Controllers
         [HttpGet()]
         [ProducesResponseType(typeof(OutputShipViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(int id)
         {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
             var result = await _shipRepository.GetAsync(x => x.ID == id, include: (x) => x.Include((y) => y.Sketch).Include(y => y.ShipStatus));
 
             if (result == null)
@@ -74,6 +85,8 @@ namespace Tersan.SketchManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSummaryForAll(InputBuildingViewModel inputBuildingViewModel)
         {
+            var validator = _validatorFactory.GetValidator<InputBuildingViewModel>();
+            await validator.ValidateAndThrowAsync(inputBuildingViewModel);
 
             var result = await _shipRepository.GetAllSummaryAsync(
                 (x) => (x.SketchID == inputBuildingViewModel.SketchId || inputBuildingViewModel.SketchId == 0),
@@ -91,6 +104,9 @@ namespace Tersan.SketchManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Add(InputAddShipViewModel inputAddShipViewModel)
         {
+            var validator = _validatorFactory.GetValidator<InputAddShipViewModel>();
+            await validator.ValidateAndThrowAsync(inputAddShipViewModel);
+
             var result = await _shipRepository.AddAsync(new Ship
             {
                 Name = inputAddShipViewModel.Name,
@@ -122,11 +138,14 @@ namespace Tersan.SketchManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(InputUpdateShipViewModel inputUpdateShipViewModel)
         {
+            var validator = _validatorFactory.GetValidator<InputUpdateShipViewModel>();
+            await  validator.ValidateAndThrowAsync(inputUpdateShipViewModel);
+
             ShipStatus? status = new();
-            if (!String.IsNullOrEmpty(inputUpdateShipViewModel.ShipStatus))
+            if (!String.IsNullOrEmpty(inputUpdateShipViewModel.ShipStatusType))
             {
                 
-                status = await  _shipStatusRepository.GetAsync((ss) => ss.StatusType == inputUpdateShipViewModel.ShipStatus);
+                status = await  _shipStatusRepository.GetAsync((ss) => ss.StatusType == inputUpdateShipViewModel.ShipStatusType);
 
                 if (status == null) return BadRequest("There is no StatusType like that you wrote");
             }
@@ -168,6 +187,11 @@ namespace Tersan.SketchManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
             var shipFromDb = await _shipRepository.GetAsync((e) => e.ID == id);
 
             if (shipFromDb == null) return NotFound();

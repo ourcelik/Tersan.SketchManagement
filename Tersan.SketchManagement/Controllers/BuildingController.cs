@@ -6,6 +6,8 @@ using Tersan.SketchManagement.Infrastructure.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Building;
+using Tersan.SketchManagement.Infrastructure.Validation.Factory;
+using FluentValidation;
 
 namespace Tersan.SketchManagement.Controllers
 {
@@ -15,9 +17,12 @@ namespace Tersan.SketchManagement.Controllers
     {
         IBuildingRepository _buildingRepository;
 
-        public BuildingController(IBuildingRepository buildingRepository)
+        ICustomValidatorFactory _validatorFactory;
+
+        public BuildingController(IBuildingRepository buildingRepository, ICustomValidatorFactory validatorFactory)
         {
             _buildingRepository = buildingRepository;
+            _validatorFactory = validatorFactory;
         }
 
         [HttpGet("GetAll")]
@@ -45,8 +50,12 @@ namespace Tersan.SketchManagement.Controllers
         [HttpGet()]
         [ProducesResponseType(typeof(OutputBuildingViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(int id)
         {
+            if (id == 0)
+                return BadRequest();
+
             var result = await _buildingRepository.GetAsync(x => x.ID == id, include: (x) => x.Include((y) => y.Sketch));
 
             if (result == null)
@@ -69,7 +78,10 @@ namespace Tersan.SketchManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSummaryForAll(InputBuildingViewModel inputBuildingViewModel)
         {
-            
+
+            var validator = _validatorFactory.GetValidator<InputBuildingViewModel>();
+            await validator.ValidateAndThrowAsync(inputBuildingViewModel);
+
             var result = await _buildingRepository.GetAllSummaryAsync(
                 (x) => (x.SketchID == inputBuildingViewModel.SketchId || inputBuildingViewModel.SketchId == 0),
                 inputBuildingViewModel.PageSize,
@@ -86,6 +98,9 @@ namespace Tersan.SketchManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Add(InputAddBuildingViewModel inputAddBuildingViewModel)
         {
+            var validator = _validatorFactory.GetValidator<InputAddBuildingViewModel>();
+            await validator.ValidateAndThrowAsync(inputAddBuildingViewModel);
+
             var mappedItemForDB = new Building()
             {
                 Name = inputAddBuildingViewModel.Name,
@@ -117,6 +132,9 @@ namespace Tersan.SketchManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(InputUpdateBuildingViewModel inputUpdateBuildingViewModel)
         {
+            var validator = _validatorFactory.GetValidator<InputUpdateBuildingViewModel>();
+            await validator.ValidateAndThrowAsync(inputUpdateBuildingViewModel);
+
             var buildingFromDb = await _buildingRepository.GetAsync((e)=>e.ID == inputUpdateBuildingViewModel.Id);
 
             if (buildingFromDb == null) return NotFound();
@@ -151,6 +169,8 @@ namespace Tersan.SketchManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
+            if (id == 0) return BadRequest();
+
             var buildingFromDb = await _buildingRepository.GetAsync((e) => e.ID == id);
 
             if (buildingFromDb == null) return NotFound();
