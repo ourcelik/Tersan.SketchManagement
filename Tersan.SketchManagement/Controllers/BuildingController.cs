@@ -70,7 +70,7 @@ namespace Tersan.SketchManagement.Controllers
                 Y = result.Y,
             };
 
-            return Ok(result);
+            return Ok(mappedResult);
         }
 
         [HttpPost("GetSummary")]
