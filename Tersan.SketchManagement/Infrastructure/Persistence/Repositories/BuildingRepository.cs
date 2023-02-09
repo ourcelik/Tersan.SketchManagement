@@ -44,7 +44,10 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
                 Name = e.Name,
                 X = e.X,
                 Y = e.Y,
-                ID = e.ID
+                ID = e.ID,
+                WindowHeight = e.WindowHeight,
+                WindowWidth = e.WindowWidth
+
             });
 
             return new PaginatedItemsViewModel<BuildingSummaryViewModel>(pageIndex, pageSize, count, mappedItems);

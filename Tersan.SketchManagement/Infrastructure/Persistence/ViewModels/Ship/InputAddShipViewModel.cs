@@ -11,5 +11,9 @@
         public decimal Y { get; set; }
 
         public int SketchID { get; set; }
+
+        public decimal WindowWidth { get; set; }
+
+        public decimal WindowHeight { get; set; }
     }
 }

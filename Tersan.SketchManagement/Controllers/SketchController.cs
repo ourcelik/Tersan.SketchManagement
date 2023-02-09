@@ -86,5 +86,15 @@ namespace Tersan.SketchManagement.Controllers
         
             return Ok(result);
         }
+
+
+        [HttpGet("GetSketchSize")]
+        public async Task<IActionResult> GetSketchSize(int id)
+        {
+            var result = await _sketchRepository.GetSizeAsync((x) => x.ID == id);
+
+            return Ok(result);
+        }
+
     }
 }

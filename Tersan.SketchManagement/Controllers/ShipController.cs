@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Tersan.SketchManagement.Application.Repositories.Abstracts;
 using Tersan.SketchManagement.Application.ViewModels;
 using Tersan.SketchManagement.Infrastructure.Models;
+using Tersan.SketchManagement.Infrastructure.Persistence.Dtos;
 using Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Building;
 using Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Ship;
 
@@ -23,12 +24,12 @@ namespace Tersan.SketchManagement.Controllers
             _shipRepository = shipRepository;
             this._shipStatusRepository = shipStatusRepository;
         }
-        [HttpGet("GetAll")]
+        [HttpPost("GetAll")]
         [ProducesResponseType(typeof(PaginatedItemsViewModel<OutputShipViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(SizeDto windowSizeDto)
         {
-            var result = await _shipRepository.GetListAsync(include: (x) => x.Include(y => y.ShipStatus).Include(y => y.Sketch));
+            var result = await _shipRepository.GetListAndScaleAsync(windowSizeDto,include: (x) => x.Include(y => y.ShipStatus).Include(y => y.Sketch));
 
             if (result == null || !result.Data.Any())
                 return NotFound();
@@ -46,12 +47,12 @@ namespace Tersan.SketchManagement.Controllers
             return Ok(newPaginatedItemsViewModel);
         }
 
-        [HttpGet()]
+        [HttpPost("Get")]
         [ProducesResponseType(typeof(OutputShipViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(int id,SizeDto windowSizeDto)
         {
-            var result = await _shipRepository.GetAsync(x => x.ID == id, include: (x) => x.Include((y) => y.Sketch).Include(y => y.ShipStatus));
+            var result = await _shipRepository.ScaleAndGetAsync(x => x.ID == id,windowSizeDto, include: (x) => x.Include((y) => y.Sketch).Include(y => y.ShipStatus));
 
             if (result == null)
                 return NotFound();
@@ -74,8 +75,13 @@ namespace Tersan.SketchManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSummaryForAll(InputBuildingViewModel inputBuildingViewModel)
         {
-
+            SizeDto size = new SizeDto
+            {
+                Height = inputBuildingViewModel.WindowHeight,
+                Width = inputBuildingViewModel.WindowWidth
+            };
             var result = await _shipRepository.GetAllSummaryAsync(
+                size,
                 (x) => (x.SketchID == inputBuildingViewModel.SketchId || inputBuildingViewModel.SketchId == 0),
                 inputBuildingViewModel.PageSize,
                 inputBuildingViewModel.PageIndex);
@@ -91,14 +97,18 @@ namespace Tersan.SketchManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Add(InputAddShipViewModel inputAddShipViewModel)
         {
-            var result = await _shipRepository.AddAsync(new Ship
+            var result = await _shipRepository.AddAndScaleAsync(new Ship
             {
                 Name = inputAddShipViewModel.Name,
                 X = inputAddShipViewModel.X,
                 Y = inputAddShipViewModel.Y,
                 SketchID = inputAddShipViewModel.SketchID,
-                ShipStatusID = inputAddShipViewModel.ShipStatusID
-            });
+                ShipStatusID = inputAddShipViewModel.ShipStatusID,
+                WindowHeight = inputAddShipViewModel.WindowHeight,
+                WindowWidth = inputAddShipViewModel.WindowWidth
+            },
+            (x) => x.ID == inputAddShipViewModel.SketchID
+            );
 
             if (result == null) return NotFound();
 
@@ -108,7 +118,7 @@ namespace Tersan.SketchManagement.Controllers
                 Name = result.Name,
                 X = result.X,
                 Y = result.Y,
-                StatusType = (await _shipStatusRepository.GetAsync((ss) => ss.ID == result.SketchID)).StatusType,
+                StatusType = (await _shipStatusRepository.GetAsync((ss) => ss.ID == result.ShipStatusID)).StatusType,
                 ShipStatusID = result.ShipStatusID,
                 IsCreated = true,
             };
@@ -125,7 +135,6 @@ namespace Tersan.SketchManagement.Controllers
             ShipStatus? status = new();
             if (!String.IsNullOrEmpty(inputUpdateShipViewModel.ShipStatus))
             {
-                
                 status = await  _shipStatusRepository.GetAsync((ss) => ss.StatusType == inputUpdateShipViewModel.ShipStatus);
 
                 if (status == null) return BadRequest("There is no StatusType like that you wrote");
@@ -142,7 +151,7 @@ namespace Tersan.SketchManagement.Controllers
 
             shipFromDb.Name = inputUpdateShipViewModel.Name != null ? inputUpdateShipViewModel.Name : shipFromDb.Name;
 
-            var updatedItem = await _shipRepository.UpdateAsync(shipFromDb);
+            var updatedItem = await _shipRepository.UpdateAndScaleAsync(x=>x.ID == shipFromDb.SketchID,shipFromDb);
 
             if (updatedItem == null) return BadRequest();
 

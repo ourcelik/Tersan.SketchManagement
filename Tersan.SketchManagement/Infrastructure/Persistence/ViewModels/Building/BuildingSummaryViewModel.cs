@@ -9,5 +9,9 @@
         public decimal X { get; set; }
 
         public decimal Y { get; set; }
+
+        public decimal WindowWidth { get; set; }
+
+        public decimal WindowHeight { get; set; }
     }
 }

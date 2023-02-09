@@ -10,8 +10,8 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
             Entity.X = (Entity.X / Entity.Sketch.Width) * windowSizeDto.Width;
             Entity.Y = (Entity.Y / Entity.Sketch.Height) * windowSizeDto.Height;
 
-            Entity.WindowWidth = windowSizeDto.Width;
-            Entity.WindowHeight = windowSizeDto.Height;
+            //Entity.WindowWidth = windowSizeDto.Width;
+            //Entity.WindowHeight = windowSizeDto.Height;
         }
 
         public static void ScalePointSizeToSketch(dynamic Entity, SizeDto windowSizeDto)
@@ -20,8 +20,8 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
             Entity.X = (Entity.X / Entity.WindowWidth) * windowSizeDto.Width;
             Entity.Y = (Entity.Y / Entity.WindowHeight) * windowSizeDto.Height;
 
-            Entity.WindowWidth = windowSizeDto.Width;
-            Entity.WindowHeight = windowSizeDto.Height;
+            //Entity.WindowWidth = windowSizeDto.Width;
+            //Entity.WindowHeight = windowSizeDto.Height;
         }
     }
 }

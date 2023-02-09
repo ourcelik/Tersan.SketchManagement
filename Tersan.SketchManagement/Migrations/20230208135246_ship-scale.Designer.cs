@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tersan.SketchManagement.Infrastructure;
 
@@ -11,9 +12,11 @@ using Tersan.SketchManagement.Infrastructure;
 namespace Tersan.SketchManagement.Migrations
 {
     [DbContext(typeof(SketchManagementDbContext))]
-    partial class SketchManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230208135246_ship-scale")]
+    partial class shipscale
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,10 +188,10 @@ namespace Tersan.SketchManagement.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("WindowHeight")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("WindowWidth")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("X")
                         .HasColumnType("decimal(18,2)");

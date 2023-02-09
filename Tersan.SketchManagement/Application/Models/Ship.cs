@@ -14,5 +14,9 @@ namespace Tersan.SketchManagement.Infrastructure.Models
 
         public int SketchID { get; set; }
 
+        public decimal WindowHeight { get; set; }
+        
+        public decimal WindowWidth { get; set; }
+
     }
 }
