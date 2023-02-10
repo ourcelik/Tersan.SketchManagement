@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tersan.SketchManagement.Infrastructure;
 
@@ -11,9 +12,11 @@ using Tersan.SketchManagement.Infrastructure;
 namespace Tersan.SketchManagement.Migrations
 {
     [DbContext(typeof(SketchManagementDbContext))]
-    partial class SketchManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230210073402_HexColorCode")]
+    partial class HexColorCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
