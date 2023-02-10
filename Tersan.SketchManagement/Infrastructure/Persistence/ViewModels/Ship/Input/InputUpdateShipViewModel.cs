@@ -12,5 +12,6 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.ViewModels.Ship
 
         public int Y { get; set; }
 
+        public string? HexColorCode { get; set; }
     }
 }

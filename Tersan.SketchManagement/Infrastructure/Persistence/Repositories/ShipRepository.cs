@@ -25,17 +25,22 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
             if (pageSize == 0) pageSize = 10;
             query = query.Skip(pageIndex * pageSize).Take(pageSize);
 
-            var count = await query.CountAsync();
-
-            var items = await query.ToListAsync();
-
-            var mappedItems = items.Select((e) => new ShipSummaryViewModel()
+            var mappedItems = query.Select((e) => new ShipSummaryViewModel()
             {
                 Name = e.Name,
                 X = e.X,
                 Y = e.Y,
-                StatusType = e.ShipStatus.StatusType
+                StatusType = e.ShipStatus.StatusType,
+                HexColorCode = e.HexColorCode
             });
+
+
+            var items = await query.ToListAsync();
+
+            var count = items.Count;
+
+
+
 
             return new PaginatedItemsViewModel<ShipSummaryViewModel>(pageIndex, pageSize, count, mappedItems);
         }

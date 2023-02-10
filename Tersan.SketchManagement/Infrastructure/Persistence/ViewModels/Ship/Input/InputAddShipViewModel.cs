@@ -11,5 +11,7 @@
         public int Y { get; set; }
 
         public int SketchID { get; set; }
+
+        public string? HexColorCode { get; set; }
     }
 }

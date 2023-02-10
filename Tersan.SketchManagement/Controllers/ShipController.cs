@@ -45,7 +45,8 @@ namespace Tersan.SketchManagement.Controllers
                 Y = x.Y,
                 StatusType = x.ShipStatus.StatusType,
                 ShipStatusID = x.ShipStatusID,
-                ID = x.ID
+                ID = x.ID,
+                HexColorCode = x.HexColorCode
             }).ToList());
 
             return Ok(newPaginatedItemsViewModel);
@@ -75,6 +76,7 @@ namespace Tersan.SketchManagement.Controllers
                 StatusType = result.ShipStatus.StatusType,
                 ShipStatusID = result.ShipStatusID,
                 ID = result.ID,
+                HexColorCode = result.HexColorCode
             };
 
             return Ok(mappedResult);
@@ -113,7 +115,8 @@ namespace Tersan.SketchManagement.Controllers
                 X = inputAddShipViewModel.X,
                 Y = inputAddShipViewModel.Y,
                 SketchID = inputAddShipViewModel.SketchID,
-                ShipStatusID = inputAddShipViewModel.ShipStatusID
+                ShipStatusID = inputAddShipViewModel.ShipStatusID,
+                HexColorCode = inputAddShipViewModel.HexColorCode
             });
 
             if (result == null) return NotFound();
@@ -126,6 +129,7 @@ namespace Tersan.SketchManagement.Controllers
                 Y = result.Y,
                 StatusType = (await _shipStatusRepository.GetAsync((ss) => ss.ID == result.SketchID)).StatusType,
                 ShipStatusID = result.ShipStatusID,
+                HexColorCode = result.HexColorCode,
                 IsCreated = true,
             };
 
@@ -159,7 +163,9 @@ namespace Tersan.SketchManagement.Controllers
             shipFromDb.X = inputUpdateShipViewModel.X != 0 ? inputUpdateShipViewModel.X : shipFromDb.X;
             shipFromDb.Y = inputUpdateShipViewModel.Y != 0 ? inputUpdateShipViewModel.Y : shipFromDb.Y;
 
-            shipFromDb.Name = inputUpdateShipViewModel.Name != null ? inputUpdateShipViewModel.Name : shipFromDb.Name;
+            shipFromDb.Name = inputUpdateShipViewModel.Name ?? shipFromDb.Name;
+
+            shipFromDb.HexColorCode = inputUpdateShipViewModel.HexColorCode ?? shipFromDb.HexColorCode;
 
             var updatedItem = await _shipRepository.UpdateAsync(shipFromDb);
 
@@ -172,6 +178,7 @@ namespace Tersan.SketchManagement.Controllers
                 ShipStatusID = updatedItem.ShipStatusID,
                 X = updatedItem.X,
                 Y = updatedItem.Y,
+                HexColorCode = updatedItem.HexColorCode,
                 StatusType = updatedItem.ShipStatus.StatusType,
                 IsUpdated = true,
             };
@@ -207,7 +214,7 @@ namespace Tersan.SketchManagement.Controllers
                 IsDeleted = true
             };
             
-            return Ok(deleted);
+            return Ok(mappedShip);
         }
         
         
