@@ -42,6 +42,7 @@ namespace Tersan.SketchManagement.Controllers
                 SketchID = x.SketchID,
                 X = x.X,
                 Y = x.Y,
+                HexColorCode = x.HexColorCode
             }).ToList());
 
             return Ok(newPaginatedItemsViewModel);
@@ -68,6 +69,7 @@ namespace Tersan.SketchManagement.Controllers
                 SketchID = result.SketchID,
                 X = result.X,
                 Y = result.Y,
+                HexColorCode = result.HexColorCode
             };
 
             return Ok(mappedResult);
@@ -106,7 +108,8 @@ namespace Tersan.SketchManagement.Controllers
                 Name = inputAddBuildingViewModel.Name,
                 SketchID = inputAddBuildingViewModel.SketchId,
                 X = inputAddBuildingViewModel.X,
-                Y = inputAddBuildingViewModel.Y
+                Y = inputAddBuildingViewModel.Y,
+                HexColorCode = inputAddBuildingViewModel.HexColorCode
             };
             var result = await _buildingRepository.AddAsync(mappedItemForDB);
 
@@ -119,6 +122,7 @@ namespace Tersan.SketchManagement.Controllers
                 SketchID = result.SketchID,
                 X = result.X,
                 Y = result.Y,
+                HexColorCode = result.HexColorCode,
                 IsCreated = true,
             };
 
@@ -142,7 +146,9 @@ namespace Tersan.SketchManagement.Controllers
             buildingFromDb.X = inputUpdateBuildingViewModel.X != 0 ? inputUpdateBuildingViewModel.X : buildingFromDb.X;
             buildingFromDb.Y = inputUpdateBuildingViewModel.Y != 0 ? inputUpdateBuildingViewModel.Y : buildingFromDb.Y;
 
-            buildingFromDb.Name = inputUpdateBuildingViewModel.Name != null ? inputUpdateBuildingViewModel.Name : buildingFromDb.Name;
+            buildingFromDb.Name = inputUpdateBuildingViewModel.Name ?? buildingFromDb.Name;
+
+            buildingFromDb.HexColorCode = inputUpdateBuildingViewModel.HexColorCode ?? buildingFromDb.HexColorCode;
 
             var updatedItem = await _buildingRepository.UpdateAsync(buildingFromDb);
 
@@ -155,6 +161,7 @@ namespace Tersan.SketchManagement.Controllers
                 SketchID = updatedItem.SketchID,
                 X = updatedItem.X,
                 Y = updatedItem.Y,
+                HexColorCode = updatedItem.HexColorCode,
                 IsUpdated = true,
             };
 
@@ -186,6 +193,7 @@ namespace Tersan.SketchManagement.Controllers
                 SketchID = deleted.SketchID,
                 X = deleted.X,
                 Y = deleted.Y,
+                HexColorCode = deleted.HexColorCode,
                 IsDeleted= true,
             };
 

@@ -10,5 +10,7 @@
 
         public int SketchId { get; set; }
 
+        public string? HexColorCode { get; set; }
+
     }
 }

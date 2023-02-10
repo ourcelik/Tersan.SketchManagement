@@ -25,18 +25,20 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
 
             query = query.Skip(pageIndex * pageSize).Take(pageSize);
 
+            var mappedItems = query.Select((e) => new BuildingSummaryViewModel()
+            {
+                Name = e.Name,
+                X = e.X,
+                Y = e.Y,
+                ID = e.ID,
+                HexColorCode = e.HexColorCode
+            });
 
             var items = await query.ToListAsync();
 
             var count = items.Count;
 
-            var mappedItems = items.Select((e) => new BuildingSummaryViewModel()
-            {
-                Name = e.Name,
-                X = e.X,
-                Y = e.Y,
-                ID = e.ID
-            });
+           
 
             return new PaginatedItemsViewModel<BuildingSummaryViewModel>(pageIndex, pageSize, count, mappedItems);
         }
