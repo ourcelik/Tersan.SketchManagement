@@ -12,6 +12,8 @@ namespace Tersan.SketchManagement.Infrastructure.Validation
             RuleFor(x => x.Name).NotEmpty().WithMessage("Building name is required");
             RuleFor(x => x.X).SetValidator(new CoordinateValidator());
             RuleFor(x => x.Y).SetValidator(new CoordinateValidator());
+
+            RuleFor(x => x.HexColorCode).SetValidator(new HexColorValidator());
         }
     }
 }
