@@ -21,7 +21,22 @@ namespace Tersan.SketchManagement.Infrastructure.EntityConfigurations
                 .WithMany()
                 .HasForeignKey("ShipStatusID")
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
+            builder.Property((ship) => ship.HexColorCode)
+                .HasMaxLength(7)
+                .IsRequired();
+
+            builder.Property((ship) => ship.Name)
+                 .HasMaxLength(100)
+                 .IsRequired();
+
+            builder.Property((ship) => ship.Width)
+                .IsRequired();
+
+            builder.Property((ship) => ship.Height)
+                .IsRequired();
+
+
         }
         
     }
