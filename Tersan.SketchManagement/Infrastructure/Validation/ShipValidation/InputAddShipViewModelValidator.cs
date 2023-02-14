@@ -18,6 +18,8 @@ namespace Tersan.SketchManagement.Infrastructure.Validation.ShipValidation
             RuleFor(x => x.Y).SetValidator(new CoordinateValidator());
 
             RuleFor(x => x.HexColorCode).SetValidator(new HexColorValidator());
+            RuleFor(x => x.Width).SetValidator(new CoordinateValidator());
+            RuleFor(x => x.Height).SetValidator(new CoordinateValidator());
         }
     }
 }

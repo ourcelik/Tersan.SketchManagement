@@ -13,5 +13,9 @@
         public int SketchID { get; set; }
 
         public string? HexColorCode { get; set; }
+
+        public int Width { get; set; }
+        
+        public int Height { get; set; }
     }
 }

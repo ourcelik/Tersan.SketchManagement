@@ -46,7 +46,9 @@ namespace Tersan.SketchManagement.Controllers
                 StatusType = x.ShipStatus.StatusType,
                 ShipStatusID = x.ShipStatusID,
                 ID = x.ID,
-                HexColorCode = x.HexColorCode
+                HexColorCode = x.HexColorCode,
+                Width = x.Width,
+                Height = x.Height
             }).ToList());
 
             return Ok(newPaginatedItemsViewModel);
@@ -76,7 +78,9 @@ namespace Tersan.SketchManagement.Controllers
                 StatusType = result.ShipStatus.StatusType,
                 ShipStatusID = result.ShipStatusID,
                 ID = result.ID,
-                HexColorCode = result.HexColorCode
+                HexColorCode = result.HexColorCode,
+                Height = result.Height,
+                Width = result.Width
             };
 
             return Ok(mappedResult);
@@ -116,7 +120,9 @@ namespace Tersan.SketchManagement.Controllers
                 Y = inputAddShipViewModel.Y,
                 SketchID = inputAddShipViewModel.SketchID,
                 ShipStatusID = inputAddShipViewModel.ShipStatusID,
-                HexColorCode = inputAddShipViewModel.HexColorCode
+                HexColorCode = inputAddShipViewModel.HexColorCode,
+                Width = inputAddShipViewModel.Width,
+                Height = inputAddShipViewModel.Height
             });
 
             if (result == null) return NotFound();
@@ -131,6 +137,8 @@ namespace Tersan.SketchManagement.Controllers
                 ShipStatusID = result.ShipStatusID,
                 HexColorCode = result.HexColorCode,
                 IsCreated = true,
+                Height = result.Height,
+                Width = result.Width
             };
 
             return Ok(mappedResult);
@@ -181,6 +189,8 @@ namespace Tersan.SketchManagement.Controllers
                 HexColorCode = updatedItem.HexColorCode,
                 StatusType = updatedItem.ShipStatus.StatusType,
                 IsUpdated = true,
+                Height = updatedItem.Height,
+                Width = updatedItem.Width
             };
 
             return Ok(mappedShip);

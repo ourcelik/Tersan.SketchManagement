@@ -31,7 +31,9 @@ namespace Tersan.SketchManagement.Infrastructure.Persistence.Repositories
                 X = e.X,
                 Y = e.Y,
                 StatusType = e.ShipStatus.StatusType,
-                HexColorCode = e.HexColorCode
+                HexColorCode = e.HexColorCode,
+                Width = e.Width,
+                Height = e.Height
             });
 
 
